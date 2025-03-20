@@ -4,10 +4,15 @@ import requests
 import matplotlib.pyplot as plt
 
 
-import cv2
-import numpy as np
-import requests
-import matplotlib.pyplot as plt
+# Lista de imágenes en GitHub
+github_images = [
+    "https://github.com/fernandajmnz/aplicacionST/blob/main/Test%20Images/1.jpeg",
+    "https://github.com/fernandajmnz/aplicacionST/blob/main/Test%20Images/2.jpeg",
+    "https://github.com/fernandajmnz/aplicacionST/blob/main/Test%20Images/3.jpeg",
+    "https://github.com/fernandajmnz/aplicacionST/blob/main/Test%20Images/4.jpeg",
+    "https://github.com/fernandajmnz/aplicacionST/blob/main/Test%20Images/5.jpeg"
+  
+]
 
 
 # Función para descargar y procesar la imagen
