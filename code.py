@@ -3,8 +3,7 @@ import numpy as np
 import requests
 import matplotlib.pyplot as plt
 
-#Array de Imagenes
-
+# Array de Imágenes
 image_links = [
     "https://i.pinimg.com/originals/93/ef/2b/93ef2beb88716fb529c8af382fe6de83.jpg",
     "https://www.thespruce.com/thmb/MdXFVicEFeOh7Oc5EG-8ormpjkQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc()/LH_KK_19036-e3c3b865bcb244fa8e6725547893588b.jpeg",
@@ -12,10 +11,6 @@ image_links = [
     "https://th.bing.com/th/id/OIP.c4uaZmVuSiEg-gZ0UL9cTwHaFI?rs=1&pid=ImgDetMain",
     "https://cdn.britannica.com/84/206384-050-00698723/Javan-gliding-tree-frog.jpg"
 ]
-
-# Puedes añadir o quitar enlaces a tu gusto
-# dog_image_links.append("https://...otro_enlace.jpg")
-
 
 # Cargar YOLO
 weights_path = "yolov3.weights"
@@ -44,9 +39,19 @@ def load_image_from_url(url):
         print(f"Error al descargar la imagen: {url}")
         return None
 
+# Función para mejorar la imagen: upscaling y filtro de nitidez
+def enhance_image(image):
+    # Upscale: aumenta el tamaño de la imagen (factor 2 en ancho y alto)
+    upscaled = cv2.resize(image, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    # Filtro de nitidez (sharpening) usando un kernel de convolución
+    kernel_sharpen = np.array([[0, -1, 0],
+                               [-1, 5, -1],
+                               [0, -1, 0]])
+    sharpened = cv2.filter2D(upscaled, -1, kernel_sharpen)
+    return sharpened
+
 def detect_animals(image):
     height, width = image.shape[:2]
-
     # Convertir la imagen para YOLO
     blob = cv2.dnn.blobFromImage(image, scalefactor=1/255.0, size=(416, 416),
                                  swapRB=True, crop=False)
@@ -96,17 +101,20 @@ image_url = image_links[0]
 # Descargar y procesar la imagen
 image = load_image_from_url(image_url)
 if image is not None:
-    animals = detect_animals(image)
+    # Mejorar la imagen: upscale y aplicar filtro de nitidez
+    enhanced_image = enhance_image(image)
+    # Detectar animales en la imagen mejorada
+    animals = detect_animals(enhanced_image)
 
     # Dibujar detecciones finales
     for (label, confidence, x1, y1, x2, y2) in animals:
-        cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        cv2.rectangle(enhanced_image, (x1, y1), (x2, y2), (0, 255, 0), 2)
         text = f"{label}: {confidence:.2f}"
-        cv2.putText(image, text, (x1, y1 - 10),
+        cv2.putText(enhanced_image, text, (x1, y1 - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 
     # Mostrar imagen con detecciones
-    plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    plt.imshow(cv2.cvtColor(enhanced_image, cv2.COLOR_BGR2RGB))
     plt.axis('off')
     plt.title(f"Animales detectados: {len(animals)}")
     plt.show()
