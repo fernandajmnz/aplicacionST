@@ -3,6 +3,20 @@ import numpy as np
 import requests
 import matplotlib.pyplot as plt
 
+#Array de Imagenes
+
+image_links = [
+    "https://i.pinimg.com/originals/93/ef/2b/93ef2beb88716fb529c8af382fe6de83.jpg",
+    "https://www.thespruce.com/thmb/MdXFVicEFeOh7Oc5EG-8ormpjkQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc()/LH_KK_19036-e3c3b865bcb244fa8e6725547893588b.jpeg",
+    "https://cdn.mos.cms.futurecdn.net/2ku2wNxtCWzxQXQ28LZFS7-1920-80.jpg",
+    "https://th.bing.com/th/id/OIP.c4uaZmVuSiEg-gZ0UL9cTwHaFI?rs=1&pid=ImgDetMain",
+    "https://cdn.britannica.com/84/206384-050-00698723/Javan-gliding-tree-frog.jpg"
+]
+
+# Puedes añadir o quitar enlaces a tu gusto
+# dog_image_links.append("https://...otro_enlace.jpg")
+
+
 # Cargar YOLO
 weights_path = "yolov3.weights"
 config_path = "yolov3.cfg"
@@ -77,7 +91,7 @@ def detect_animals(image):
     return final_detections
 
 # URL de imagen de prueba
-image_url = "https://i.pinimg.com/originals/93/ef/2b/93ef2beb88716fb529c8af382fe6de83.jpg"
+image_url = image_links[0]
 
 # Descargar y procesar la imagen
 image = load_image_from_url(image_url)
